@@ -1,3 +1,16 @@
 {
-  "plugins": []
+  "plugins": [
+    {
+      "id": "habits",
+      "repository": "https://github.com/mazarelo/kiwipot-habits",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "manifest": "https://github.com/mazarelo/kiwipot-habits/releases/download/1.0.0/kiwipot-plugin.json",
+          "manifestSha256": "7606702859156ecba022e165db20fbb57c5cfe707b679d085ec9b2f1666eda76",
+          "bundleSha256": "a9d5197ad37ee072dfeb0a8bda498b19ef9896294e5415fe6f5a17c8c8dd69c9"
+        }
+      ]
+    }
+  ]
 }
