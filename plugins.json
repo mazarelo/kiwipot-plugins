@@ -9,6 +9,12 @@
           "manifest": "https://github.com/mazarelo/kiwipot-habits/releases/download/1.0.0/kiwipot-plugin.json",
           "manifestSha256": "7606702859156ecba022e165db20fbb57c5cfe707b679d085ec9b2f1666eda76",
           "bundleSha256": "a9d5197ad37ee072dfeb0a8bda498b19ef9896294e5415fe6f5a17c8c8dd69c9"
+        },
+        {
+          "version": "1.0.1",
+          "manifest": "https://github.com/mazarelo/kiwipot-habits/releases/download/1.0.1/kiwipot-plugin.json",
+          "manifestSha256": "0a7cf9d22aa4e8297f9a936f541d2a29fcdf06a644df7cedd0c82f2271ff2b42",
+          "bundleSha256": "eaf6aa54b4b3f852160d09c7916509af0b56512e7f9b3647d9f87cd301fb6c64"
         }
       ]
     }
