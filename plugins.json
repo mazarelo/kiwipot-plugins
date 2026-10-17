@@ -17,6 +17,18 @@
           "bundleSha256": "eaf6aa54b4b3f852160d09c7916509af0b56512e7f9b3647d9f87cd301fb6c64"
         }
       ]
+    },
+    {
+      "id": "gym",
+      "repository": "https://github.com/mazarelo/kiwipot-my-plugins/tree/main/gym",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "manifest": "https://github.com/mazarelo/kiwipot-my-plugins/releases/download/gym-1.0.0/kiwipot-plugin.json",
+          "manifestSha256": "30a9bf5a86d498a7e0bf40465f9e834a8d0bb6a6e76b29c91c968ee38ed5a0de",
+          "bundleSha256": "a7d6b10ceba59f10895776e469113640f319380c2924774af063a77b7c8e68b5"
+        }
+      ]
     }
   ]
 }

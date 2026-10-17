@@ -32,6 +32,7 @@ if (problems.length === 0) {
         const may = [
           permissions.account ? `account: ${permissions.account}` : '',
           permissions.network?.length ? `network: ${permissions.network.join(', ')}` : '',
+          permissions.notifications ? 'notifications' : '',
         ].filter(Boolean);
         rows.push(
           `| ${plugin.id} | ${version.version} | ${may.join('; ') || 'its blocks only'} | ${Math.ceil(served.scriptBytes / 1024)} KB | [source](${plugin.repository}) |`
