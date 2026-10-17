@@ -5,12 +5,14 @@ import { createHash } from 'node:crypto';
 export const PLUGIN_ID = /^[a-z0-9][a-z0-9.-]{0,63}$/;
 export const VERSION = /^\d{1,6}\.\d{1,6}\.\d{1,6}([-+][0-9A-Za-z.-]{1,32})?$/;
 export const SHA256 = /^[0-9a-f]{64}$/;
-// Built with the app: no plugin of the registry may take these ids
-export const BUILTIN_IDS = new Set(['board', 'gym']);
+// Built with the app (the server's BuiltinPluginIDs): no plugin of the registry may take these ids
+export const BUILTIN_IDS = new Set(['board', 'gym', 'shopping', 'excalidraw', 'slides']);
 // The protocol Kiwipot's apps speak now
 export const MAX_PROTOCOL = 2;
 const MAX_MANIFEST_BYTES = 64 * 1024;
 const MAX_SCRIPT_BYTES = 5 * 1024 * 1024;
+// The redirects the server follows for one fetch
+const MAX_REDIRECTS = 3;
 
 export const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
 
@@ -64,8 +66,17 @@ export const registryProblems = (registry) => {
   return problems;
 };
 
+// Fetches as the server does, following its redirects one by one: the bytes, and every address it went through
 const get = async (url, limit, what) => {
-  const response = await fetch(url, { redirect: 'follow' });
+  const visited = [url];
+  let response = await fetch(url, { redirect: 'manual' });
+  while (response.status >= 300 && response.status < 400 && response.headers.get('location')) {
+    if (visited.length > MAX_REDIRECTS) {
+      throw new Error(`the ${what} at ${url} redirects more than ${MAX_REDIRECTS} times`);
+    }
+    visited.push(new URL(response.headers.get('location'), visited.at(-1)).href);
+    response = await fetch(visited.at(-1), { redirect: 'manual' });
+  }
   if (!response.ok) {
     throw new Error(`the ${what} at ${url} answered ${response.status}`);
   }
@@ -73,7 +84,17 @@ const get = async (url, limit, what) => {
   if (bytes.length > limit) {
     throw new Error(`the ${what} is over ${limit / 1024} KB`);
   }
-  return { bytes, url: response.url };
+  return { bytes, url: visited.at(-1), visited };
+};
+
+/**
+ * Where a manifest's script may be, in the order the server tries them: next to the manifest's last address on the
+ * link's own host (a release's link, not the storage GitHub's downloads redirect to), then next to its last address.
+ */
+export const scriptURLs = (main, manifestURL, visited) => {
+  const host = new URL(manifestURL).host;
+  const onHost = visited.findLast((address) => new URL(address).host === host) ?? visited.at(-1);
+  return [...new Set([new URL(main, onHost).href, new URL(main, visited.at(-1)).href])];
 };
 
 /** A version as its host serves it: the manifest, its script, and both SHA-256s. */
@@ -88,18 +109,29 @@ export const fetchVersion = async (manifestURL) => {
   if (typeof parsed.main !== 'string' || !parsed.main) {
     throw new Error('the manifest has no "main"');
   }
-  const scriptURL = new URL(parsed.main, manifest.url).href;
-  if (!httpsLink(scriptURL)) {
-    throw new Error(`"main" is not on the web over https: ${scriptURL}`);
+  let failure;
+  for (const scriptURL of scriptURLs(parsed.main, manifestURL, manifest.visited)) {
+    if (!httpsLink(scriptURL)) {
+      throw new Error(`"main" is not on the web over https: ${scriptURL}`);
+    }
+    try {
+      const script = await get(scriptURL, MAX_SCRIPT_BYTES, 'script');
+      return {
+        manifest: parsed,
+        manifestSha256: sha256(manifest.bytes),
+        bundleSha256: sha256(script.bytes),
+        scriptURL,
+        scriptBytes: script.bytes.length,
+      };
+    } catch (error) {
+      failure ??= error;
+      // Too large is too large wherever it is
+      if (/ is over /.test(error.message)) {
+        throw error;
+      }
+    }
   }
-  const script = await get(scriptURL, MAX_SCRIPT_BYTES, 'script');
-  return {
-    manifest: parsed,
-    manifestSha256: sha256(manifest.bytes),
-    bundleSha256: sha256(script.bytes),
-    scriptURL,
-    scriptBytes: script.bytes.length,
-  };
+  throw failure;
 };
 
 /** What a reviewer should know of a manifest, or must reject. */

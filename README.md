@@ -6,7 +6,7 @@ To write a plugin, start with [the plugin guide](https://kiwipot.com/developers/
 
 ## Submitting a plugin
 
-1. **Publish a release** with your `kiwipot-plugin.json` and its built script, at links that don't change: a GitHub release's files are best (`https://github.com/you/your-plugin/releases/download/1.0.0/kiwipot-plugin.json`). Its `"main"` is the script's **absolute** link (`https://github.com/you/your-plugin/releases/download/1.0.0/plugin.js`): GitHub's download links redirect to signed storage URLs, and a path would be resolved against those. [kiwipot-habits](https://github.com/mazarelo/kiwipot-habits)'s release workflow does this for you.
+1. **Publish a release** with your `kiwipot-plugin.json` and its built script, at links that don't change: a GitHub release's files are best (`https://github.com/you/your-plugin/releases/download/1.0.0/kiwipot-plugin.json`). Its `"main"` can be a path such as `"plugin.js"`: Kiwipot looks for it next to your link first, though GitHub's download links redirect to signed storage elsewhere, then next to where the manifest was in the end. [kiwipot-habits](https://github.com/mazarelo/kiwipot-habits) has a release workflow.
 2. **Pin it:** `node scripts/pin.mjs <link to your kiwipot-plugin.json>` prints the version's entry.
 3. **Open a pull request** that adds your plugin to `plugins.json`:
 
