@@ -2,7 +2,7 @@
 
 The reviewed plugins of [Kiwipot](https://kiwipot.com): `plugins.json` lists them, and Kiwipot offers them in **Settings → Plugins**. Each version is pinned by the SHA-256 of its manifest and of its script, so what was reviewed is exactly what people install.
 
-To write a plugin, start with [the plugin guide](https://kiwipot.com/developers/plugins) and try it in [the playground](https://kiwipot.com/developers/playground).
+To write a plugin, start with [the plugin guide](https://kiwipot.com/developers/plugins) and try it in [the playground](https://kiwipot.com/developers/playground). Questions, ideas and what you built: [Discussions](https://github.com/mazarelo/kiwipot-plugins/discussions).
 
 ## Submitting a plugin
 
