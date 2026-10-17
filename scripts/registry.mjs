@@ -6,7 +6,7 @@ export const PLUGIN_ID = /^[a-z0-9][a-z0-9.-]{0,63}$/;
 export const VERSION = /^\d{1,6}\.\d{1,6}\.\d{1,6}([-+][0-9A-Za-z.-]{1,32})?$/;
 export const SHA256 = /^[0-9a-f]{64}$/;
 // Built with the app (the server's BuiltinPluginIDs): no plugin of the registry may take these ids
-export const BUILTIN_IDS = new Set(['board', 'gym', 'shopping', 'excalidraw', 'slides']);
+export const BUILTIN_IDS = new Set(['board', 'shopping', 'excalidraw', 'slides']);
 // The protocol Kiwipot's apps speak now
 export const MAX_PROTOCOL = 2;
 const MAX_MANIFEST_BYTES = 64 * 1024;
